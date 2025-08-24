@@ -1,0 +1,21 @@
+version: '3'
+
+tasks:
+  deploy:
+    desc: Deploy the app to GitHub Pages
+    cmds:
+      - npm run build
+      - npx gh-pages -d dist
+    sources:
+      - src/**/*
+      - public/**/*
+      - index.html
+      - vite.config.ts
+      - package.json
+    generates:
+      - dist/**/*
+
+  dev:
+    desc: Start the development server
+    cmds:
+      - npm run dev
