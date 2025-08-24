@@ -1,5 +1,6 @@
 import { Routes, Route, Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
+import JsonUtilsPage from "./pages/JsonUtils"
 
 // Home page component
 function Home() {
@@ -8,28 +9,6 @@ function Home() {
       <h1 className="text-4xl font-bold">Welcome Home</h1>
       <p className="text-muted-foreground">This is the home page of your app</p>
       <Button>Get Started</Button>
-    </div>
-  )
-}
-
-// About page component
-function About() {
-  return (
-    <div className="flex min-h-svh flex-col items-center justify-center space-y-4">
-      <h1 className="text-4xl font-bold">About</h1>
-      <p className="text-muted-foreground">Learn more about this application</p>
-      <Button variant="outline">Learn More</Button>
-    </div>
-  )
-}
-
-// Contact page component
-function Contact() {
-  return (
-    <div className="flex min-h-svh flex-col items-center justify-center space-y-4">
-      <h1 className="text-4xl font-bold">Contact</h1>
-      <p className="text-muted-foreground">Get in touch with us</p>
-      <Button variant="secondary">Send Message</Button>
     </div>
   )
 }
@@ -46,11 +25,8 @@ function App() {
               <Link to="/" className="text-foreground hover:text-primary transition-colors">
                 Home
               </Link>
-              <Link to="/about" className="text-foreground hover:text-primary transition-colors">
-                About
-              </Link>
-              <Link to="/contact" className="text-foreground hover:text-primary transition-colors">
-                Contact
+              <Link to="/json-utils" className="text-foreground hover:text-primary transition-colors">
+                JSON Utils
               </Link>
             </div>
           </div>
@@ -61,8 +37,7 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route path="/json-utils" element={<JsonUtilsPage />} />
         </Routes>
       </main>
     </div>
