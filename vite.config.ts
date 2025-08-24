@@ -4,9 +4,9 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [react(), tailwindcss()],
-  // base: '/utils_page/', // Commented out for development
+  base: command === 'build' ? '/utils_page/' : '/',
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -23,4 +23,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))
