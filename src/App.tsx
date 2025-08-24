@@ -41,7 +41,7 @@ function App() {
       <nav className="border-b bg-card">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold">Utils Page</h1>
+            <h1 className="text-xl font-bold">Utils</h1>
             <div className="flex space-x-4">
               <Link to="/" className="text-foreground hover:text-primary transition-colors">
                 Home
