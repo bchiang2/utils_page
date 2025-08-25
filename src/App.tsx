@@ -1,6 +1,7 @@
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import JsonUtilsPage from './pages/JsonUtilsPage';
+import NotePage from './pages/NotePage';
 import { Toaster } from '@/components/ui/sonner';
 
 // Home page component
@@ -15,6 +16,16 @@ function Home() {
 }
 
 function App() {
+  const location = useLocation();
+
+  // Helper function to check if a link is active
+  const isActive = (path: string) => {
+    if (path === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname.startsWith(path);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -25,15 +36,33 @@ function App() {
             <div className="flex space-x-4">
               <Link
                 to="/"
-                className="text-foreground hover:text-primary transition-colors"
+                className={`transition-colors ${
+                  isActive('/')
+                    ? 'text-primary font-medium'
+                    : 'text-foreground hover:text-primary'
+                }`}
               >
                 Home
               </Link>
               <Link
                 to="/json-utils"
-                className="text-foreground hover:text-primary transition-colors"
+                className={`transition-colors ${
+                  isActive('/json-utils')
+                    ? 'text-primary font-medium'
+                    : 'text-foreground hover:text-primary'
+                }`}
               >
                 JSON
+              </Link>
+              <Link
+                to="/notes"
+                className={`transition-colors ${
+                  isActive('/notes')
+                    ? 'text-primary font-medium'
+                    : 'text-foreground hover:text-primary'
+                }`}
+              >
+                Notes
               </Link>
             </div>
           </div>
@@ -45,6 +74,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/json-utils" element={<JsonUtilsPage />} />
+          <Route path="/notes" element={<NotePage />} />
         </Routes>
       </main>
 
