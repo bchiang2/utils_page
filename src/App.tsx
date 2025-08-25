@@ -1,6 +1,6 @@
 import { Routes, Route, Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
-import JsonUtilsPage from "./pages/JsonUtils"
+import JsonUtilsPage from "./pages/JsonUtilsPage"
 
 // Home page component
 function Home() {
