@@ -122,98 +122,95 @@ function JsonUtilsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-8xl mx-auto px-4">
-        {/* Main Content */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          {/* Status Bar */}
-          <div className="px-6 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              {isValidJSON ? (
-                <Badge
-                  variant="secondary"
-                  className="bg-emerald-100 text-emerald-700 border-emerald-200"
-                >
-                  <CheckCircle2Icon className="h-3 w-3 mr-1" />
-                  Valid JSON
-                </Badge>
-              ) : (
-                <Badge
-                  variant="secondary"
-                  className="bg-red-100 text-red-700 border-red-200"
-                >
-                  <AlertCircleIcon className="h-3 w-3 mr-1" />
-                  Invalid JSON
-                </Badge>
-              )}
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-2">
-              <Button
-                onClick={handleFormatJSON}
-                size="sm"
-                disabled={!isValidJSON}
-                className="bg-blue-600 hover:bg-blue-700 text-white disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
+    <div className="h-[calc(100vh-64px)]">
+      <div className="h-full bg-white border border-gray-200 overflow-hidden flex flex-col">
+        {/* Status Bar */}
+        <div className="px-6 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {isValidJSON ? (
+              <Badge
+                variant="secondary"
+                className="bg-emerald-100 text-emerald-700 border-emerald-200"
               >
-                Format
-              </Button>
-              <Button
-                variant="outline"
-                onClick={handleMinifyJSON}
-                size="sm"
-                disabled={!isValidJSON}
-                className="border-gray-300 text-gray-700 hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed"
+                <CheckCircle2Icon className="h-3 w-3 mr-1" />
+                Valid JSON
+              </Badge>
+            ) : (
+              <Badge
+                variant="secondary"
+                className="bg-red-100 text-red-700 border-red-200"
               >
-                Minify
-              </Button>
-              <Button
-                variant="outline"
-                onClick={handleEscapeJSON}
-                size="sm"
-                disabled={!isValidJSON}
-                className="border-gray-300 text-gray-700 hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed"
-              >
-                {isEscapedJSON(jsonContent) ? 'Unescape' : 'Escape'}
-              </Button>
-              <Button
-                variant="outline"
-                onClick={handleDownloadJSON}
-                size="sm"
-                disabled={!isValidJSON}
-                className="border-gray-300 text-gray-700 hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed"
-              >
-                Download
-              </Button>
-            </div>
+                <AlertCircleIcon className="h-3 w-3 mr-1" />
+                Invalid JSON
+              </Badge>
+            )}
           </div>
 
-          {/* Editor */}
-          <div className="h-[600px] w-full">
-            <Editor
-              height="100%"
-              width="100%"
-              defaultLanguage="json"
-              value={jsonContent}
-              onChange={value => {
-                const newContent = value || '';
-                setJsonContent(newContent);
-              }}
-              theme="vs"
-              options={{
-                minimap: { enabled: false },
-                fontSize: 14,
-                lineNumbers: 'on',
-                roundedSelection: false,
-                scrollBeyondLastLine: false,
-                automaticLayout: true,
-                padding: { top: 16, bottom: 16 },
-                lineHeight: 20,
-                fontFamily:
-                  'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
-              }}
-            />
+          {/* Action Buttons */}
+          <div className="flex gap-2">
+            <Button
+              onClick={handleFormatJSON}
+              size="sm"
+              disabled={!isValidJSON}
+              className="bg-blue-600 hover:bg-blue-700 text-white disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
+            >
+              Format
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleMinifyJSON}
+              size="sm"
+              disabled={!isValidJSON}
+              className="border-gray-300 text-gray-700 hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed"
+            >
+              Minify
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleEscapeJSON}
+              size="sm"
+              disabled={!isValidJSON}
+              className="border-gray-300 text-gray-700 hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed"
+            >
+              {isEscapedJSON(jsonContent) ? 'Unescape' : 'Escape'}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleDownloadJSON}
+              size="sm"
+              disabled={!isValidJSON}
+              className="border-gray-300 text-gray-700 hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed"
+            >
+              Download
+            </Button>
           </div>
+        </div>
+
+        {/* Editor */}
+        <div className="flex-1 min-h-0 w-full">
+          <Editor
+            height="100%"
+            width="100%"
+            defaultLanguage="json"
+            value={jsonContent}
+            onChange={value => {
+              const newContent = value || '';
+              setJsonContent(newContent);
+            }}
+            theme="vs"
+            options={{
+              minimap: { enabled: false },
+              fontSize: 14,
+              lineNumbers: 'on',
+              roundedSelection: false,
+              scrollBeyondLastLine: false,
+              automaticLayout: true,
+              padding: { top: 16, bottom: 16 },
+              lineHeight: 20,
+              fontFamily:
+                'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
+            }}
+          />
         </div>
       </div>
     </div>
