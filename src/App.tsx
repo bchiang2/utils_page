@@ -1,4 +1,4 @@
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Routes, Route, NavLink } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import JsonUtilsPage from './pages/JsonUtilsPage';
 import NotePage from './pages/NotePage';
@@ -16,16 +16,6 @@ function Home() {
 }
 
 function App() {
-  const location = useLocation();
-
-  // Helper function to check if a link is active
-  const isActive = (path: string) => {
-    if (path === '/') {
-      return location.pathname === '/';
-    }
-    return location.pathname.startsWith(path);
-  };
-
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -33,37 +23,56 @@ function App() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-bold">Utils</h1>
-            <div className="flex space-x-4">
-              <Link
+            <div className="flex items-center gap-6">
+              <NavLink
                 to="/"
-                className={`transition-colors ${
-                  isActive('/')
-                    ? 'text-primary font-medium'
-                    : 'text-foreground hover:text-primary'
-                }`}
+                end
+                className={({ isActive }) =>
+                  [
+                    'relative px-0.5 transition-colors',
+                    'text-foreground hover:text-primary',
+                    'after:content-[""] after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-full',
+                    'after:origin-left after:scale-x-0 after:bg-primary after:transition-transform after:duration-200',
+                    isActive
+                      ? 'text-primary font-semibold after:scale-x-100'
+                      : 'hover:after:scale-x-100',
+                  ].join(' ')
+                }
               >
                 Home
-              </Link>
-              <Link
+              </NavLink>
+              <NavLink
                 to="/json-utils"
-                className={`transition-colors ${
-                  isActive('/json-utils')
-                    ? 'text-primary font-medium'
-                    : 'text-foreground hover:text-primary'
-                }`}
+                className={({ isActive }) =>
+                  [
+                    'relative px-0.5 transition-colors',
+                    'text-foreground hover:text-primary',
+                    'after:content-[""] after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-full',
+                    'after:origin-left after:scale-x-0 after:bg-primary after:transition-transform after:duration-200',
+                    isActive
+                      ? 'text-primary font-semibold after:scale-x-100'
+                      : 'hover:after:scale-x-100',
+                  ].join(' ')
+                }
               >
                 JSON
-              </Link>
-              <Link
+              </NavLink>
+              <NavLink
                 to="/notes"
-                className={`transition-colors ${
-                  isActive('/notes')
-                    ? 'text-primary font-medium'
-                    : 'text-foreground hover:text-primary'
-                }`}
+                className={({ isActive }) =>
+                  [
+                    'relative px-0.5 transition-colors',
+                    'text-foreground hover:text-primary',
+                    'after:content-[""] after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-full',
+                    'after:origin-left after:scale-x-0 after:bg-primary after:transition-transform after:duration-200',
+                    isActive
+                      ? 'text-primary font-semibold after:scale-x-100'
+                      : 'hover:after:scale-x-100',
+                  ].join(' ')
+                }
               >
                 Notes
-              </Link>
+              </NavLink>
             </div>
           </div>
         </div>
