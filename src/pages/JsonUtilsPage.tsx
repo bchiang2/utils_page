@@ -10,9 +10,8 @@ import {
   isEscapedJSON,
 } from '@/lib/json_utils';
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
-import { AlertCircleIcon, CheckCircle2Icon } from 'lucide-react';
+import { CheckCircle2Icon, AlertCircleIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
 function JsonUtilsPage() {
@@ -21,10 +20,6 @@ function JsonUtilsPage() {
   );
   const [isValidJSON, setIsValidJSON] = useState(false);
 
-  // Debug logging for state changes
-  useEffect(() => {
-    console.log('isValidJSON state changed to:', isValidJSON);
-  }, [isValidJSON]);
   const validationTimeoutRef = useRef<number | null>(null);
 
   // Debounced JSON validation
@@ -35,13 +30,9 @@ function JsonUtilsPage() {
 
     const timeout = window.setTimeout(() => {
       const isValid = validateJSON(content);
-      console.log('Validating JSON:', {
-        content: content.substring(0, 50) + '...',
-        isValid,
-      });
       setIsValidJSON(isValid);
       validationTimeoutRef.current = null;
-    }, 300); // 300ms debounce delay
+    }, 300);
 
     validationTimeoutRef.current = timeout;
   }, []);
@@ -61,28 +52,16 @@ function JsonUtilsPage() {
   // Initial validation on mount
   useEffect(() => {
     const isValid = validateJSON(jsonContent);
-    console.log('Initial validation:', { isValid });
     setIsValidJSON(isValid);
-
-    // Test validation function with invalid JSON
-    const testInvalid = validateJSON('{"invalid": json}');
-    console.log('Test invalid JSON validation:', { testInvalid });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [jsonContent]);
 
   const handleFormatJSON = () => {
     try {
       const formatted = formatJSON(jsonContent);
       setJsonContent(formatted);
-      console.log('JSON formatted successfully');
-
-      // Show success toast
-      toast.success('JSON formatted successfully!', {
-        description: 'Your JSON has been formatted with proper indentation.',
-      });
+      toast.success('JSON formatted successfully');
     } catch (error) {
       console.error('Error formatting JSON:', error);
-      // The validation will automatically show the error state
     }
   };
 
@@ -90,15 +69,9 @@ function JsonUtilsPage() {
     try {
       const minified = minifyJSON(jsonContent);
       setJsonContent(minified);
-      console.log('JSON minified successfully');
-
-      // Show success toast
-      toast.success('JSON minified successfully!', {
-        description: 'Your JSON has been compressed by removing whitespace.',
-      });
+      toast.success('JSON minified successfully');
     } catch (error) {
       console.error('Error minifying JSON:', error);
-      // The validation will automatically show the error state
     }
   };
 
@@ -106,92 +79,140 @@ function JsonUtilsPage() {
     try {
       let result: string;
       let action: string;
-      let description: string;
 
       if (isEscapedJSON(jsonContent)) {
-        // If already escaped, unescape it
         result = unescapeJSONString(jsonContent);
         action = 'unescaped';
-        description =
-          'Your escaped JSON has been converted back to formatted JSON.';
       } else {
-        // If not escaped, escape it
         result = escapeJSONString(jsonContent);
         action = 'escaped';
-        description = 'Your JSON has been escaped for use as a string value.';
       }
 
       setJsonContent(result);
-      console.log(`JSON ${action} successfully`);
-
-      // Show success toast
-      toast.success(`JSON ${action} successfully!`, {
-        description: description,
-      });
+      toast.success(`JSON ${action} successfully`);
     } catch (error) {
       console.error('Error processing JSON:', error);
-      // The validation will automatically show the error state
     }
   };
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid gap-6">
-          <div className="bg-card border rounded-lg p-6">
-            <div className="space-y-4">
-              {/* JSON Validation Status */}
-              {!isValidJSON ? (
-                <Alert variant="destructive">
-                  <AlertCircleIcon className="h-4 w-4" />
-                  <AlertDescription>
-                    Invalid JSON format. Please check your syntax.
-                  </AlertDescription>
-                </Alert>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <Badge
-                    variant="secondary"
-                    className="bg-green-500 text-white hover:bg-green-600"
-                  >
-                    <CheckCircle2Icon className="h-3 w-3 mr-1" />
-                    Valid JSON
-                  </Badge>
-                </div>
-              )}
 
-              <div
-                className="border rounded-md overflow-hidden"
-                style={{ height: '31.25rem' }}
-              >
-                <Editor
-                  height="100%"
-                  defaultLanguage="json"
-                  value={jsonContent}
-                  onChange={value => {
-                    const newContent = value || '';
-                    setJsonContent(newContent);
-                  }}
-                  theme="vs"
-                  options={{
-                    minimap: { enabled: false },
-                    fontSize: 14,
-                    lineNumbers: 'on',
-                    roundedSelection: false,
-                    scrollBeyondLastLine: false,
-                    automaticLayout: true,
-                  }}
-                />
-              </div>
-              <div className="flex gap-3">
-                <Button onClick={handleFormatJSON}>Format JSON</Button>
-                <Button variant="outline" onClick={handleMinifyJSON}>
-                  Minify
-                </Button>
-                <Button variant="outline" onClick={handleEscapeJSON}>
-                  {isEscapedJSON(jsonContent) ? 'Unescape' : 'Escape'}
-                </Button>
-              </div>
+  const handleDownloadJSON = () => {
+    try {
+      // Create a blob with the JSON content
+      const blob = new Blob([jsonContent], { type: 'application/json' });
+
+      // Create a download link
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'data.json';
+
+      // Trigger download
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast.success('JSON downloaded successfully');
+    } catch (error) {
+      console.error('Error downloading JSON:', error);
+      toast.error('Failed to download JSON');
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-8xl mx-auto px-4">
+        {/* Main Content */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          {/* Status Bar */}
+          <div className="px-6 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {isValidJSON ? (
+                <Badge
+                  variant="secondary"
+                  className="bg-emerald-100 text-emerald-700 border-emerald-200"
+                >
+                  <CheckCircle2Icon className="h-3 w-3 mr-1" />
+                  Valid JSON
+                </Badge>
+              ) : (
+                <Badge
+                  variant="secondary"
+                  className="bg-red-100 text-red-700 border-red-200"
+                >
+                  <AlertCircleIcon className="h-3 w-3 mr-1" />
+                  Invalid JSON
+                </Badge>
+              )}
             </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-2">
+              <Button
+                onClick={handleFormatJSON}
+                size="sm"
+                disabled={!isValidJSON}
+                className="bg-blue-600 hover:bg-blue-700 text-white disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
+              >
+                Format
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleMinifyJSON}
+                size="sm"
+                disabled={!isValidJSON}
+                className="border-gray-300 text-gray-700 hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed"
+              >
+                Minify
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleEscapeJSON}
+                size="sm"
+                disabled={!isValidJSON}
+                className="border-gray-300 text-gray-700 hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed"
+              >
+                {isEscapedJSON(jsonContent) ? 'Unescape' : 'Escape'}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleDownloadJSON}
+                size="sm"
+                disabled={!isValidJSON}
+                className="border-gray-300 text-gray-700 hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed"
+              >
+                Download
+              </Button>
+            </div>
+          </div>
+
+          {/* Editor */}
+          <div className="h-[600px] w-full">
+            <Editor
+              height="100%"
+              width="100%"
+              defaultLanguage="json"
+              value={jsonContent}
+              onChange={value => {
+                const newContent = value || '';
+                setJsonContent(newContent);
+              }}
+              theme="vs"
+              options={{
+                minimap: { enabled: false },
+                fontSize: 14,
+                lineNumbers: 'on',
+                roundedSelection: false,
+                scrollBeyondLastLine: false,
+                automaticLayout: true,
+                padding: { top: 16, bottom: 16 },
+                lineHeight: 20,
+                fontFamily:
+                  'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
+              }}
+            />
           </div>
         </div>
       </div>
