@@ -1,7 +1,7 @@
-import { Routes, Route, Link } from "react-router-dom"
-import { Button } from "@/components/ui/button"
-import JsonUtilsPage from "./pages/JsonUtilsPage"
-import { Toaster } from "@/components/ui/sonner"
+import { Routes, Route, Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import JsonUtilsPage from './pages/JsonUtilsPage';
+import { Toaster } from '@/components/ui/sonner';
 
 // Home page component
 function Home() {
@@ -11,7 +11,7 @@ function Home() {
       <p className="text-muted-foreground">This is the home page of your app</p>
       <Button>Get Started</Button>
     </div>
-  )
+  );
 }
 
 function App() {
@@ -23,10 +23,16 @@ function App() {
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-bold">Utils</h1>
             <div className="flex space-x-4">
-              <Link to="/" className="text-foreground hover:text-primary transition-colors">
+              <Link
+                to="/"
+                className="text-foreground hover:text-primary transition-colors"
+              >
                 Home
               </Link>
-              <Link to="/json-utils" className="text-foreground hover:text-primary transition-colors">
+              <Link
+                to="/json-utils"
+                className="text-foreground hover:text-primary transition-colors"
+              >
                 JSON Utils
               </Link>
             </div>
@@ -41,11 +47,11 @@ function App() {
           <Route path="/json-utils" element={<JsonUtilsPage />} />
         </Routes>
       </main>
-      
+
       {/* Toast notifications */}
       <Toaster />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
