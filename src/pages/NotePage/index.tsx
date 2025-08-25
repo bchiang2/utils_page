@@ -3,23 +3,10 @@ import { NoteSidebar, type NoteListItem } from './Sidebar';
 import { EditorPane } from './EditorPane';
 import { Button } from '@/components/ui/button';
 import { Plus, Trash } from 'lucide-react';
-import { type Note, createNote as createNoteUtil } from '@/lib/notes';
+import { type Note } from '@/lib/notes';
 import { useNotes } from './useNotes';
 
-const INITIAL_NOTES: Note[] = [
-  createNoteUtil({
-    title: 'Welcome Note',
-    content: '# Welcome\n\nThis is your first note. Start typing here!\n',
-  }),
-  createNoteUtil({
-    title: 'Ideas',
-    content: '- Note-taking layout\n- Keyboard shortcuts\n- Export to file\n',
-  }),
-  createNoteUtil({
-    title: 'Todos',
-    content: '- [ ] Refactor components\n- [ ] Add persistence\n',
-  }),
-];
+const INITIAL_NOTES: Note[] = [];
 
 function NotePage() {
   const { notes, create, updateContent, updateTitle, remove } =
