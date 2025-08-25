@@ -33,7 +33,7 @@ function App() {
                 to="/json-utils"
                 className="text-foreground hover:text-primary transition-colors"
               >
-                JSON Utils
+                JSON
               </Link>
             </div>
           </div>

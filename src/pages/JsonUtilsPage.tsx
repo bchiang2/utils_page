@@ -9,7 +9,7 @@ import {
   unescapeJSONString,
   isEscapedJSON,
 } from '@/lib/json_utils';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { AlertCircleIcon, CheckCircle2Icon } from 'lucide-react';
@@ -25,40 +25,38 @@ function JsonUtilsPage() {
   useEffect(() => {
     console.log('isValidJSON state changed to:', isValidJSON);
   }, [isValidJSON]);
-  const [validationTimeout, setValidationTimeout] =
-    useState<NodeJS.Timeout | null>(null);
+  const validationTimeoutRef = useRef<number | null>(null);
 
   // Debounced JSON validation
-  const debouncedValidation = useCallback(
-    (content: string) => {
-      if (validationTimeout) {
-        clearTimeout(validationTimeout);
-      }
+  const debouncedValidation = useCallback((content: string) => {
+    if (validationTimeoutRef.current !== null) {
+      window.clearTimeout(validationTimeoutRef.current);
+    }
 
-      const timeout = setTimeout(() => {
-        const isValid = validateJSON(content);
-        console.log('Validating JSON:', {
-          content: content.substring(0, 50) + '...',
-          isValid,
-        });
-        setIsValidJSON(isValid);
-      }, 300); // 300ms debounce delay
+    const timeout = window.setTimeout(() => {
+      const isValid = validateJSON(content);
+      console.log('Validating JSON:', {
+        content: content.substring(0, 50) + '...',
+        isValid,
+      });
+      setIsValidJSON(isValid);
+      validationTimeoutRef.current = null;
+    }, 300); // 300ms debounce delay
 
-      setValidationTimeout(timeout);
-    },
-    [validationTimeout]
-  );
+    validationTimeoutRef.current = timeout;
+  }, []);
 
   // Validate JSON when content changes
   useEffect(() => {
     debouncedValidation(jsonContent);
 
     return () => {
-      if (validationTimeout) {
-        clearTimeout(validationTimeout);
+      if (validationTimeoutRef.current !== null) {
+        window.clearTimeout(validationTimeoutRef.current);
+        validationTimeoutRef.current = null;
       }
     };
-  }, [jsonContent, debouncedValidation, validationTimeout]);
+  }, [jsonContent, debouncedValidation]);
 
   // Initial validation on mount
   useEffect(() => {
@@ -172,8 +170,6 @@ function JsonUtilsPage() {
                   onChange={value => {
                     const newContent = value || '';
                     setJsonContent(newContent);
-                    // Trigger immediate validation for better UX
-                    debouncedValidation(newContent);
                   }}
                   theme="vs"
                   options={{
