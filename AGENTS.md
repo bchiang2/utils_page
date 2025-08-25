@@ -25,6 +25,13 @@
 - Persistence via versioned `localStorage` schema; pure helpers for load/save.
 - State hooks encapsulate business logic (`useNotes`) and debounce saves.
 
+**Routing**
+
+- React Router with `BrowserRouter` and `basename={import.meta.env.BASE_URL}`.
+- Vite `base` set to `/utils_page/` on build, `/` in dev.
+- Keep absolute app routes (e.g., `/json-utils`); basename prefixes on build.
+- Works locally and on GitHub Pages subpath without code changes.
+
 **Conventions**
 
 - Exports: default for pages, named for components/utils.
