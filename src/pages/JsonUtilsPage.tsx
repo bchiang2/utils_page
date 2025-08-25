@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button"
 import Editor from "@monaco-editor/react"
-import { SAMPLE_JSON_DATA, formatJSON, validateJSON } from "@/lib/json_utils"
-import { useRef, useState, useEffect, useCallback } from "react"
+import { SAMPLE_JSON_DATA, formatJSON, validateJSON, minifyJSON, escapeJSONString } from "@/lib/json_utils"
+import { useState, useEffect, useCallback } from "react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { AlertCircleIcon, CheckCircle2Icon } from "lucide-react"
+import { toast } from "sonner"
 
 function JsonUtilsPage() {
-  const editorRef = useRef<any>(null)
   const [jsonContent, setJsonContent] = useState(JSON.stringify(SAMPLE_JSON_DATA, null, 2))
   const [isValidJSON, setIsValidJSON] = useState(false)
   
@@ -58,18 +58,52 @@ function JsonUtilsPage() {
     try {
       const formatted = formatJSON(jsonContent)
       setJsonContent(formatted)
+      console.log('JSON formatted successfully')
+      
+      // Show success toast
+      toast.success("JSON formatted successfully!", {
+        description: "Your JSON has been formatted with proper indentation."
+      })
     } catch (error) {
-      // Error handling is now done through the continuous validation
+      console.error('Error formatting JSON:', error)
+      // The validation will automatically show the error state
+    }
+  }
+
+  const handleMinifyJSON = () => {
+    try {
+      const minified = minifyJSON(jsonContent)
+      setJsonContent(minified)
+      console.log('JSON minified successfully')
+      
+      // Show success toast
+      toast.success("JSON minified successfully!", {
+        description: "Your JSON has been compressed by removing whitespace."
+      })
+    } catch (error) {
+      console.error('Error minifying JSON:', error)
+      // The validation will automatically show the error state
+    }
+  }
+
+  const handleEscapeJSON = () => {
+    try {
+      const escaped = escapeJSONString(jsonContent)
+      setJsonContent(escaped)
+      console.log('JSON escaped successfully')
+      
+      // Show success toast
+      toast.success("JSON escaped successfully!", {
+        description: "Your JSON has been escaped for use as a string value."
+      })
+    } catch (error) {
+      console.error('Error escaping JSON:', error)
+      // The validation will automatically show the error state
     }
   }
   return (
     <div className="container mx-auto px-4 py-8">
               <div className="max-w-6xl mx-auto">
-        <div className="mb-8">
-          <p className="text-muted-foreground text-lg">
-            Json Toolkit
-          </p>
-        </div>
         <div className="grid gap-6">
           <div className="bg-card border rounded-lg p-6">
             <div className="space-y-4">
@@ -89,6 +123,8 @@ function JsonUtilsPage() {
                   </Badge>
                 </div>
               )}
+              
+
               
               <div className="border rounded-md overflow-hidden" style={{ height: '31.25rem' }}>
                 <Editor
@@ -114,7 +150,8 @@ function JsonUtilsPage() {
               </div>
               <div className="flex gap-3">
                 <Button onClick={handleFormatJSON}>Format JSON</Button>
-                <Button variant="outline">Minify</Button>
+                <Button variant="outline" onClick={handleMinifyJSON}>Minify</Button>
+                <Button variant="outline" onClick={handleEscapeJSON}>Escape</Button>
                 <Button variant="outline">Copy</Button>
               </div>
             </div>

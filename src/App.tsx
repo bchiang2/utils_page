@@ -1,6 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import JsonUtilsPage from "./pages/JsonUtilsPage"
+import { Toaster } from "@/components/ui/sonner"
 
 // Home page component
 function Home() {
@@ -40,6 +41,9 @@ function App() {
           <Route path="/json-utils" element={<JsonUtilsPage />} />
         </Routes>
       </main>
+      
+      {/* Toast notifications */}
+      <Toaster />
     </div>
   )
 }

@@ -24,3 +24,14 @@ export const minifyJSON = (jsonString: string): string => {
     throw new Error("Invalid JSON format")
   }
 }
+
+export const escapeJSONString = (jsonString: string): string => {
+  try {
+    // First validate that it's valid JSON
+    JSON.parse(jsonString)
+    // Then escape it for use as a string value in another JSON
+    return JSON.stringify(jsonString)
+  } catch (error) {
+    throw new Error("Invalid JSON format")
+  }
+}
